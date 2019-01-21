@@ -13,7 +13,7 @@ void UBaseWeaponComponent::BeginPlay()
     bCanFire = true;
 }
 
-bool UBaseWeaponComponent::CanFire()
+bool UBaseWeaponComponent::CanFire() const
 {
     return bCanFire;
 }
@@ -29,7 +29,7 @@ void UBaseWeaponComponent::StopShooting()
     bIsShooting = false;
 }
 
-bool UBaseWeaponComponent::IsRealoading()
+bool UBaseWeaponComponent::IsRealoading() const
 {
     return false;
 }
@@ -44,7 +44,7 @@ void UBaseWeaponComponent::AbortRealoading()
 
 }
 
-uint8 UBaseWeaponComponent::GetAmmo()
+uint8 UBaseWeaponComponent::GetAmmo() const
 {
     return Ammo;
 }
@@ -62,7 +62,11 @@ void UBaseWeaponComponent::PrepareShooting()
 
         Ammo -= 1;
 
-        Shoot();
+        FVector MuzzleLocation;
+        FQuat MuzzleRotation;
+        GetSocketWorldLocationAndRotation(TEXT("MuzzleFlash"), MuzzleLocation, MuzzleRotation);
+
+        Shoot(MuzzleLocation, MuzzleRotation);
 
         GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &UBaseWeaponComponent::ShotTimerExpired, FireRate);
     }
@@ -79,7 +83,7 @@ void UBaseWeaponComponent::ReloadTimerExpired()
 
 }
 
-void UBaseWeaponComponent::Shoot()
+void UBaseWeaponComponent::Shoot(FVector Location, FQuat Direction)
 {
 
 }

@@ -64,10 +64,7 @@ protected:
     UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
     uint8 AmountOfAmmo;
 
-    UPROPERTY(Category = "Muzzle", BlueprintReadWrite, EditDefaultsOnly)
-    FVector MuzzlePoint;
-
-    virtual void Shoot();
+    virtual void Shoot(FVector Location, FQuat Direction);
 
 private:
     uint8 bCanFire : 1;//TODO delete?
