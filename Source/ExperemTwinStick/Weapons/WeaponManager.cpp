@@ -2,32 +2,33 @@
 
 #include "WeaponManager.h"
 
-// Sets default values for this component's properties
-UWeaponManager::UWeaponManager()
+bool UWeaponManager::CanFire() const
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+    return false;
 }
 
-
-// Called when the game starts
-void UWeaponManager::BeginPlay()
+void UWeaponManager::StartShooting()
 {
-	Super::BeginPlay();
-
-	// ...
-	
 }
 
-
-// Called every frame
-void UWeaponManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UWeaponManager::StopShooting()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
+void UWeaponManager::Reaload()
+{
+}
+
+bool UWeaponManager::IsRealoading() const
+{
+    return false;
+}
+
+void UWeaponManager::AbortRealoading()
+{
+}
+
+uint8 UWeaponManager::GetAmmo() const
+{
+    return uint8();
+}

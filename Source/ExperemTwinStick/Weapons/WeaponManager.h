@@ -7,22 +7,34 @@
 #include "WeaponManager.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(WeapoManager), Abstract)
 class EXPEREMTWINSTICK_API UWeaponManager : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UWeaponManager();
+
+    UFUNCTION(Category = "Shooting", BlueprintCallable)
+    virtual bool CanFire() const;
+
+    UFUNCTION(Category = "Shooting", BlueprintCallable)
+    virtual void StartShooting();
+
+    UFUNCTION(Category = "Shooting", BlueprintCallable)
+    virtual void StopShooting();
+
+    UFUNCTION(Category = "Reloading", BlueprintCallable)
+    virtual void Reaload();
+
+    UFUNCTION(Category = "Reloading", BlueprintCallable)
+    virtual bool IsRealoading() const;
+
+    UFUNCTION(Category = "Reloading", BlueprintCallable)
+    virtual void AbortRealoading();
+
+    UFUNCTION(Category = "Ammo", BlueprintCallable)
+    virtual uint8 GetAmmo() const;
 
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-		
+	
 };
