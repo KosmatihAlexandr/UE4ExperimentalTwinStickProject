@@ -42,6 +42,12 @@ public:
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     uint8 GetAmmo() const;
 
+    UFUNCTION(Category = "Ammo", BlueprintCallable)
+    uint8 GetAmountOfAmmo() const;
+
+    UFUNCTION(Category = "Ammo", BlueprintCallable)
+    bool IsAmmoLeft() const;
+
 protected:
 
     virtual void BeginPlay() override;
@@ -52,8 +58,11 @@ protected:
     TEnumAsByte<EWeaponType> AnimType;
 
     /* Weapon shooting animation */
-    UPROPERTY(Category = Animation, EditAnywhere, BlueprintReadWrite)
+    UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
     class UAnimationAsset* FireAnimation;
+
+    UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
+    class UAnimationAsset* ReloadAnimation;
 
     UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
     float FireRate;

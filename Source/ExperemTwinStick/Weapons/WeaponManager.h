@@ -35,6 +35,9 @@ public:
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     virtual uint8 GetAmmo() const;
 
+    UFUNCTION(Category = "Ammo", BlueprintCallable)
+    virtual uint8 GetAmountOfAmmo() const;
+
 protected:
 	
 };

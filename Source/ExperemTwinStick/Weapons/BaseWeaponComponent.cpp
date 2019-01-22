@@ -36,7 +36,12 @@ bool UBaseWeaponComponent::IsRealoading() const
 
 uint8 UBaseWeaponComponent::RealoadAmmo(uint8 amount)
 {
-    return uint8();
+    if (ReloadAnimation != nullptr)
+    {
+        PlayAnimation(ReloadAnimation, false);
+    }
+    GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReloadTimerExpired, this, &UBaseWeaponComponent::ReloadTimerExpired, ReloadTime);
+    return amount - AmountOfAmmo + Ammo;
 }
 
 void UBaseWeaponComponent::AbortRealoading()
@@ -49,26 +54,40 @@ uint8 UBaseWeaponComponent::GetAmmo() const
     return Ammo;
 }
 
+uint8 UBaseWeaponComponent::GetAmountOfAmmo() const
+{
+    return AmountOfAmmo;
+}
+
+bool UBaseWeaponComponent::IsAmmoLeft() const
+{
+    return Ammo > 0;
+}
+
 void UBaseWeaponComponent::PrepareShooting()
 {
     if (bIsShooting && bCanFire)
     {
-        if (FireAnimation != nullptr)
+        if (IsAmmoLeft())
         {
-            PlayAnimation(FireAnimation, false);
+
+            bCanFire = false;
+
+            if (FireAnimation != nullptr)
+            {
+                PlayAnimation(FireAnimation, false);
+            }
+
+            Ammo -= 1;
+
+            FVector MuzzleLocation;
+            FQuat MuzzleRotation;
+            GetSocketWorldLocationAndRotation(TEXT("MuzzleFlash"), MuzzleLocation, MuzzleRotation);
+
+            Shoot(MuzzleLocation, MuzzleRotation);
+
+            GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &UBaseWeaponComponent::ShotTimerExpired, FireRate);
         }
-
-        bCanFire = false;
-
-        Ammo -= 1;
-
-        FVector MuzzleLocation;
-        FQuat MuzzleRotation;
-        GetSocketWorldLocationAndRotation(TEXT("MuzzleFlash"), MuzzleLocation, MuzzleRotation);
-
-        Shoot(MuzzleLocation, MuzzleRotation);
-
-        GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &UBaseWeaponComponent::ShotTimerExpired, FireRate);
     }
 }
 
@@ -80,7 +99,7 @@ void UBaseWeaponComponent::ShotTimerExpired()
 
 void UBaseWeaponComponent::ReloadTimerExpired()
 {
-
+    Ammo = AmountOfAmmo;
 }
 
 void UBaseWeaponComponent::Shoot(FVector Location, FQuat Direction)

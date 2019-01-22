@@ -32,7 +32,7 @@ void USimpleWeaponManager::Reaload()
 {
     if (Weapon != nullptr)
     {
-        Weapon->RealoadAmmo(100);
+        Weapon->RealoadAmmo(Weapon->GetAmountOfAmmo());
     }
 }
 
@@ -62,6 +62,11 @@ uint8 USimpleWeaponManager::GetAmmo() const
     return 0;
 }
 
+uint8 USimpleWeaponManager::GetAmountOfAmmo() const
+{
+    return Weapon->GetAmountOfAmmo();
+}
+
 void USimpleWeaponManager::TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponClass)
 {
     Weapon = NewObject<UBaseWeaponComponent>(this, WeaponClass, TEXT("Weapon"));
@@ -71,5 +76,5 @@ void USimpleWeaponManager::TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponCl
     }
 
     Weapon->RegisterComponent();
-    Weapon->AttachTo(this, NAME_None, EAttachLocation::KeepRelativeOffset);
+    Weapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
 }

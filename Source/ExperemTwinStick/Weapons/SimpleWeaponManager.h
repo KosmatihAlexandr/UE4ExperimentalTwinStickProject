@@ -32,6 +32,8 @@ public:
 
     virtual uint8 GetAmmo() const override;
 
+    virtual uint8 GetAmountOfAmmo() const override;
+
     UFUNCTION(Category = "Wepon", BlueprintCallable)
     void TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponClass);
 

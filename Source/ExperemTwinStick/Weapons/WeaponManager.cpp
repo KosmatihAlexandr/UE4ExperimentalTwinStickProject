@@ -32,3 +32,8 @@ uint8 UWeaponManager::GetAmmo() const
 {
     return uint8();
 }
+
+uint8 UWeaponManager::GetAmountOfAmmo() const
+{
+    return uint8();
+}
