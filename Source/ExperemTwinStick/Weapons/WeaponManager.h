@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "WeaponEnums.h"
 #include "WeaponManager.generated.h"
 
 
@@ -37,6 +38,9 @@ public:
 
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     virtual uint8 GetAmountOfAmmo() const;
+
+    UFUNCTION(Category = "WeapoType", BlueprintCallable)
+    virtual EWeaponType GetWeaponType() const;
 
 protected:
 	

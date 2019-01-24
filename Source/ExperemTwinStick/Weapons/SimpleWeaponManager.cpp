@@ -64,17 +64,39 @@ uint8 USimpleWeaponManager::GetAmmo() const
 
 uint8 USimpleWeaponManager::GetAmountOfAmmo() const
 {
-    return Weapon->GetAmountOfAmmo();
+    if (Weapon != nullptr)
+    {
+        return Weapon->GetAmountOfAmmo();
+    }
+    return 0;
+}
+
+EWeaponType USimpleWeaponManager::GetWeaponType() const
+{
+    if (Weapon != nullptr)
+    {
+        return Weapon->GetWeaponType();
+    }
+    return EWeaponType::None;
 }
 
 void USimpleWeaponManager::TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponClass)
 {
-    Weapon = NewObject<UBaseWeaponComponent>(this, WeaponClass, TEXT("Weapon"));
-    if (Weapon == nullptr)
+    if (Weapon != nullptr)
+    {
+        Weapon->UnregisterComponent();
+        Weapon->DestroyComponent();
+        Weapon->SetActive(false);
+    }
+
+    UBaseWeaponComponent* NWeapon = NewObject<UBaseWeaponComponent>(this, WeaponClass);
+    if (NWeapon == nullptr)
     {
         return;
     }
 
-    Weapon->RegisterComponent();
-    Weapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
+    NWeapon->RegisterComponent();
+    NWeapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
+    
+    Weapon = NWeapon;
 }

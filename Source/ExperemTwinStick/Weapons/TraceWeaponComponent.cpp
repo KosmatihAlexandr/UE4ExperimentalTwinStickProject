@@ -17,7 +17,8 @@ void UTraceWeaponComponent::Shoot(FVector Location, FQuat Direction)
 
         FCollisionQueryParams CollisionParams = FCollisionQueryParams::DefaultQueryParam;
         CollisionParams.TraceTag = TraceTag;
-        
+        CollisionParams.AddIgnoredActor(GetOwner());
+
         if (World->LineTraceSingleByChannel(Hit, Location, EndLocation, ECollisionChannel::ECC_Camera, CollisionParams))
         {
             AActor* Owner = GetOwner();
