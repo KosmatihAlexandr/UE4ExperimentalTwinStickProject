@@ -37,3 +37,8 @@ uint8 UWeaponManager::GetAmountOfAmmo() const
 {
     return uint8();
 }
+
+EWeaponType UWeaponManager::GetWeaponType() const
+{
+    return EWeaponType::None;
+}

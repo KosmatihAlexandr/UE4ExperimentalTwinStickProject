@@ -2,15 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "WeaponEnums.h"
 #include "BaseWeaponComponent.generated.h"
-
-UENUM(BlueprintType)
-enum EWeaponType
-{
-    Pistol     UMETA(DisplayName = "Pistol"),
-    Rifle      UMETA(DisplayName = "Rifle"),
-    None   UMETA(DisplayName = "None")
-};
 
 /**
  * 
@@ -37,7 +30,7 @@ public:
     bool IsRealoading() const;
 
     UFUNCTION(Category = "Reloading", BlueprintCallable)
-    void AbortRealoading();
+    uint8 AbortRealoading();
 
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     uint8 GetAmmo() const;
@@ -48,6 +41,9 @@ public:
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     bool IsAmmoLeft() const;
 
+    UFUNCTION(Category = "WeapoType", BlueprintCallable)
+    EWeaponType GetWeaponType() const;
+
 protected:
 
     virtual void BeginPlay() override;
@@ -55,7 +51,7 @@ protected:
     UBaseWeaponComponent();
 
     UPROPERTY(Category = "Animation", BlueprintReadWrite, EditDefaultsOnly)
-    TEnumAsByte<EWeaponType> AnimType;
+    TEnumAsByte<EWeaponType> WeaponType;
 
     /* Weapon shooting animation */
     UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
@@ -63,6 +59,12 @@ protected:
 
     UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
     class UAnimationAsset* ReloadAnimation;
+
+    UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
+    UAnimMontage* FireAnimationMontage;
+
+    UPROPERTY(Category = "Animation", EditAnywhere, BlueprintReadWrite)
+    UAnimMontage* ReloadAnimationMontage;
 
     UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
     float FireRate;
@@ -76,7 +78,6 @@ protected:
     virtual void Shoot(FVector Location, FQuat Direction);
 
 private:
-    uint8 bCanFire : 1;//TODO delete?
     uint8 bIsShooting : 1;
 
     uint8 Ammo;

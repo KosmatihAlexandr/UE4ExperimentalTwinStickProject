@@ -10,12 +10,12 @@ UBaseWeaponComponent::UBaseWeaponComponent()
 void UBaseWeaponComponent::BeginPlay()
 {
     Super::BeginPlay();
-    bCanFire = true;
+    Ammo = AmountOfAmmo;
 }
 
 bool UBaseWeaponComponent::CanFire() const
 {
-    return bCanFire;
+    return !TimerHandle_ReloadTimerExpired.IsValid() && !TimerHandle_ShotTimerExpired.IsValid();
 }
 
 void UBaseWeaponComponent::StartShooting()
@@ -36,17 +36,47 @@ bool UBaseWeaponComponent::IsRealoading() const
 
 uint8 UBaseWeaponComponent::RealoadAmmo(uint8 amount)
 {
+    if (Ammo >= AmountOfAmmo)
+    {
+        return amount;
+    }
+    if (TimerHandle_ReloadTimerExpired.IsValid())
+    {
+        return amount;
+    }
+
     if (ReloadAnimation != nullptr)
     {
         PlayAnimation(ReloadAnimation, false);
+    }
+    USkeletalMeshComponent* Owner = Cast<USkeletalMeshComponent>(GetAttachParent()->GetAttachParent());
+
+    if (Owner != nullptr && ReloadAnimationMontage != nullptr)
+    {
+        UAnimInstance* AnimInstance = Owner->GetAnimInstance();
+        if (AnimInstance != nullptr)
+        {
+            AnimInstance->Montage_Play(ReloadAnimationMontage);
+        }
     }
     GetWorld()->GetTimerManager().SetTimer(TimerHandle_ReloadTimerExpired, this, &UBaseWeaponComponent::ReloadTimerExpired, ReloadTime);
     return amount - AmountOfAmmo + Ammo;
 }
 
-void UBaseWeaponComponent::AbortRealoading()
+uint8 UBaseWeaponComponent::AbortRealoading()
 {
+    TimerHandle_ReloadTimerExpired.Invalidate();
+    USkeletalMeshComponent* Owner = Cast<USkeletalMeshComponent>(GetAttachParent()->GetAttachParent());
 
+    if (Owner != nullptr && ReloadAnimationMontage != nullptr)
+    {
+        UAnimInstance* AnimInstance = Owner->GetAnimInstance();
+        if (AnimInstance != nullptr)
+        {
+            AnimInstance->Montage_Stop(0.1f, ReloadAnimationMontage);
+        }
+    }
+    return AmountOfAmmo - Ammo;
 }
 
 uint8 UBaseWeaponComponent::GetAmmo() const
@@ -64,15 +94,17 @@ bool UBaseWeaponComponent::IsAmmoLeft() const
     return Ammo > 0;
 }
 
+EWeaponType UBaseWeaponComponent::GetWeaponType() const
+{
+    return WeaponType;
+}
+
 void UBaseWeaponComponent::PrepareShooting()
 {
-    if (bIsShooting && bCanFire)
+    if (bIsShooting && CanFire())
     {
         if (IsAmmoLeft())
         {
-
-            bCanFire = false;
-
             if (FireAnimation != nullptr)
             {
                 PlayAnimation(FireAnimation, false);
@@ -86,6 +118,17 @@ void UBaseWeaponComponent::PrepareShooting()
 
             Shoot(MuzzleLocation, MuzzleRotation);
 
+            USkeletalMeshComponent* Owner = Cast<USkeletalMeshComponent>(GetAttachParent()->GetAttachParent());
+            
+            if (Owner != nullptr && FireAnimationMontage != nullptr)
+            {
+                UAnimInstance* AnimInstance = Owner->GetAnimInstance();
+                if (AnimInstance != nullptr)
+                {
+                    AnimInstance->Montage_Play(FireAnimationMontage);
+                }
+            }
+
             GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &UBaseWeaponComponent::ShotTimerExpired, FireRate);
         }
     }
@@ -93,12 +136,13 @@ void UBaseWeaponComponent::PrepareShooting()
 
 void UBaseWeaponComponent::ShotTimerExpired()
 {
-    bCanFire = true;
+    TimerHandle_ShotTimerExpired.Invalidate();
     PrepareShooting();
 }
 
 void UBaseWeaponComponent::ReloadTimerExpired()
 {
+    TimerHandle_ReloadTimerExpired.Invalidate();
     Ammo = AmountOfAmmo;
 }
 
