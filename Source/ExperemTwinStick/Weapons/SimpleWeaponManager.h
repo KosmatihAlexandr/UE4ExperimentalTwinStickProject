@@ -36,9 +36,14 @@ public:
 
     virtual EWeaponType GetWeaponType() const override;
 
+    virtual float GetWeaponFiringRange() const override;
+
     UFUNCTION(Category = "Wepon", BlueprintCallable)
     void TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponClass);
 
 protected:
     UBaseWeaponComponent* Weapon;
+
+    UFUNCTION()
+    void NeedReload();
 };

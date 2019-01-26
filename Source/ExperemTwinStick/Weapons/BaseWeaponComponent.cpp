@@ -99,6 +99,11 @@ EWeaponType UBaseWeaponComponent::GetWeaponType() const
     return WeaponType;
 }
 
+float UBaseWeaponComponent::GetWeaponFiringRange() const
+{
+    return 0.0f;
+}
+
 void UBaseWeaponComponent::PrepareShooting()
 {
     if (bIsShooting && CanFire())
@@ -128,8 +133,12 @@ void UBaseWeaponComponent::PrepareShooting()
                     AnimInstance->Montage_Play(FireAnimationMontage);
                 }
             }
-
+            
             GetWorld()->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &UBaseWeaponComponent::ShotTimerExpired, FireRate);
+        }
+        else
+        {
+            OnNeedAmmo.Broadcast();
         }
     }
 }
@@ -144,6 +153,7 @@ void UBaseWeaponComponent::ReloadTimerExpired()
 {
     TimerHandle_ReloadTimerExpired.Invalidate();
     Ammo = AmountOfAmmo;
+    PrepareShooting();
 }
 
 void UBaseWeaponComponent::Shoot(FVector Location, FQuat Direction)

@@ -39,6 +39,9 @@ public:
     UFUNCTION(Category = "Ammo", BlueprintCallable)
     virtual uint8 GetAmountOfAmmo() const;
 
+    UFUNCTION(Category = "WeapoStat", BlueprintCallable)
+    virtual float GetWeaponFiringRange() const;
+
     UFUNCTION(Category = "WeapoType", BlueprintCallable)
     virtual EWeaponType GetWeaponType() const;
 

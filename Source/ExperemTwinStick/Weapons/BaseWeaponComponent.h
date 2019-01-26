@@ -5,6 +5,9 @@
 #include "WeaponEnums.h"
 #include "BaseWeaponComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWeaponEvents);
+
+
 /**
  * 
  */
@@ -44,6 +47,12 @@ public:
     UFUNCTION(Category = "WeapoType", BlueprintCallable)
     EWeaponType GetWeaponType() const;
 
+    UFUNCTION(Category = "WeapoStat", BlueprintCallable)
+    virtual float GetWeaponFiringRange() const;
+
+    UPROPERTY(BlueprintAssignable)
+    FWeaponEvents OnNeedAmmo;
+
 protected:
 
     virtual void BeginPlay() override;
@@ -74,6 +83,9 @@ protected:
 
     UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
     uint8 AmountOfAmmo;
+
+    UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
+    float NoiseRange = 1000;
 
     virtual void Shoot(FVector Location, FQuat Direction);
 

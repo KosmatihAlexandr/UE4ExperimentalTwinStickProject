@@ -80,6 +80,15 @@ EWeaponType USimpleWeaponManager::GetWeaponType() const
     return EWeaponType::None;
 }
 
+float USimpleWeaponManager::GetWeaponFiringRange() const
+{
+    if (Weapon != nullptr)
+    {
+        return Weapon->GetWeaponFiringRange();
+    }
+    return 0.0f;
+}
+
 void USimpleWeaponManager::TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponClass)
 {
     if (Weapon != nullptr)
@@ -99,4 +108,11 @@ void USimpleWeaponManager::TakeWeapon(TSubclassOf<UBaseWeaponComponent> WeaponCl
     NWeapon->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform, NAME_None);
     
     Weapon = NWeapon;
+
+    Weapon->OnNeedAmmo.AddDynamic(this, &USimpleWeaponManager::NeedReload);
+}
+
+void USimpleWeaponManager::NeedReload()
+{
+    Reaload();
 }

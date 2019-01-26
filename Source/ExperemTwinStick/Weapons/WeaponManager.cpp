@@ -38,6 +38,11 @@ uint8 UWeaponManager::GetAmountOfAmmo() const
     return uint8();
 }
 
+float UWeaponManager::GetWeaponFiringRange() const
+{
+    return 0.0f;
+}
+
 EWeaponType UWeaponManager::GetWeaponType() const
 {
     return EWeaponType::None;

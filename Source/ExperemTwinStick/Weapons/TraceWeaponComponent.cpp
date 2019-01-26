@@ -43,3 +43,8 @@ void UTraceWeaponComponent::Shoot(FVector Location, FQuat Direction)
         }
     }
 }
+
+float UTraceWeaponComponent::GetWeaponFiringRange() const
+{
+    return Distance;
+}

@@ -14,6 +14,9 @@ class EXPEREMTWINSTICK_API UTraceWeaponComponent : public UBaseWeaponComponent
 {
 	GENERATED_BODY()
 	
+public:
+    virtual float GetWeaponFiringRange() const override;
+
 protected:
     UPROPERTY(Category = "Weapon stats", BlueprintReadWrite, EditDefaultsOnly)
     float Distance = 300.f;
